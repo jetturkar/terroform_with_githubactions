@@ -1,3 +1,4 @@
+
 name: Terraform
 
 on:
@@ -20,11 +21,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Set up Terraform
-        uses: hashicorp/setup-terraform@v1
-        with:
-          terraform_version: 0.14.8
-
       - name: Terraform Format
         run: terraform fmt ./terraform
 
@@ -44,7 +40,4 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        uses: hashicorp/terraform-action@v0.14.8
-        with:
-          subcommand: apply
-          working-dir: ${{ steps.envfile.outputs.envpath }}
+        run: terraform apply ./terraform
