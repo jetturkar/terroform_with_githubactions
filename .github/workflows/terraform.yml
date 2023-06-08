@@ -46,8 +46,9 @@ jobs:
         run: |
           echo "TF_ACTIONS_WORKING_DIR=./terraform" >> $GITHUB_ENV
 
+         
       - name: Terraform Apply -auto-approve
         if: github.ref == 'refs/heads/main'
         run: |
-          cd ./terraform
-          terraform apply
+         cd ./terraform
+         terraform apply -auto-approve
