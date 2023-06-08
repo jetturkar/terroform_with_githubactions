@@ -13,6 +13,6 @@ provider "azurerm" {
 }
 
 resource "azurerm_resource_group" "myapplication" {
-  name     = "test-rg"
+  name     = "test1-rg"
   location = "East US"
 }
