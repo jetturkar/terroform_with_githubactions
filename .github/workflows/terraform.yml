@@ -9,46 +9,33 @@ on:
 jobs:
   terraform:
     name: Terraform
-    env:
-      ARM_CLIENT_ID: '${{ secrets.AZURE_AD_CLIENT_ID }}'
-      ARM_CLIENT_SECRET: '${{ secrets.AZURE_AD_CLIENT_SECRET }}'
-      ARM_SUBSCRIPTION_ID: '${{ secrets.AZURE_SUBSCRIPTION_ID }}'
-      ARM_TENANT_ID: '${{ secrets.AZURE_AD_TENANT_ID }}'
     runs-on: ubuntu-latest
-    defaults:
-      run:
-        shell: bash
+    env:
+      ARM_CLIENT_ID: ${{ secrets.AZURE_AD_CLIENT_ID }}
+      ARM_CLIENT_SECRET: ${{ secrets.AZURE_AD_CLIENT_SECRET }}
+      ARM_SUBSCRIPTION_ID: ${{ secrets.AZURE_SUBSCRIPTION_ID }}
+      ARM_TENANT_ID: ${{ secrets.AZURE_AD_TENANT_ID }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
 
-      - name: Terraform Format
-        uses: hashicorp/terraform-github-actions@v2
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
         with:
-          tf_actions_version: 0.14.8
-          tf_actions_subcommand: fmt
-          tf_actions_working_dir: ./terraform
+          terraform_version: 0.14.8
+
+      - name: Terraform Format
+        run: terraform fmt ./terraform
 
       - name: Terraform Init
-        uses: hashicorp/terraform-github-actions@v2
-        with:
-          tf_actions_version: 0.14.8
-          tf_actions_subcommand: init
-          tf_actions_working_dir: ./terraform
+        run: terraform init ./terraform
 
       - name: Terraform Validate
-        uses: hashicorp/terraform-github-actions@v2
-        with:
-          tf_actions_version: 0.14.8
-          tf_actions_subcommand: validate
-          tf_actions_working_dir: ./terraform
+        run: terraform validate ./terraform
 
       - name: Terraform Plan
-        uses: hashicorp/terraform-github-actions@v2
-        with:
-          tf_actions_version: 0.14.8
-          tf_actions_subcommand: plan
-          tf_actions_working_dir: ./terraform
+        run: terraform plan ./terraform
 
       - name: Create Environment File
         id: envfile
@@ -57,9 +44,7 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        uses: hashicorp/terraform-github-actions@v2
-        env:
-          TF_ACTIONS_VERSION: 0.14.8
+        uses: hashicorp/terraform-action@v0.14.8
         with:
-          tf_actions_subcommand: apply
-          tf_actions_working_dir: '${{ steps.envfile.outputs.envpath }}'
+          subcommand: apply
+          working-dir: ${{ steps.envfile.outputs.envpath }}
