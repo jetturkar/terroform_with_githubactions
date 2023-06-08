@@ -6,6 +6,10 @@ terraform {
   container_name       = "terraformcontainer"
   key                  = "terraformcontainer.tfstate"
 }
+  
+  provider "azurerm" {
+  features {}
+}
 
 }
 resource "azurerm_resource_group" "myapplication" {
