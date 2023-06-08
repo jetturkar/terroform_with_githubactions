@@ -22,16 +22,16 @@ jobs:
         uses: actions/checkout@v2
 
       - name: Terraform Format
-        run: terraform fmt ./terraform
+        run: terraform fmt -chdir=./terraform
 
       - name: Terraform Init
-        run: terraform init ./terraform
+        run: terraform init -chdir=./terraform
 
       - name: Terraform Validate
-        run: terraform validate ./terraform
+        run: terraform validate -chdir=./terraform
 
       - name: Terraform Plan
-        run: terraform plan ./terraform
+        run: terraform plan -chdir=./terraform
 
       - name: Create Environment File
         id: envfile
@@ -40,4 +40,4 @@ jobs:
 
       - name: Terraform Apply
         if: github.ref == 'refs/heads/main'
-        run: terraform apply ./terraform
+        run: terraform apply -chdir=./terraform
